@@ -1,10 +1,11 @@
 
 import os
 
-os.environ['OPENAI_API_KEY'] = ".........."
+os.environ['OPENAI_API_KEY'] = "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"
 import sqlite3
 import tkinter as tk
 import tkinter.ttk as ttk
+import langchain
 from langchain.agents import create_sql_agent
 from langchain.agents.agent_toolkits import SQLDatabaseToolkit
 from langchain.sql_database import SQLDatabase
@@ -13,14 +14,15 @@ from langchain.agents import AgentExecutor
 
 # Connect to the database and execute the SQL script
 conn = sqlite3.connect('Chinook.db')
-with open('./Chinook_Sqlite.sql', 'r',encoding='cp1252', errors='replace') as f:
+with open('C:/Users/aryan/Desktop/WORK/Rsystem/sql_gen/Chinook_Sqlite.sql', 'r',encoding='cp1252', errors='replace') as f:
     sql_script = f.read()
 conn.executescript(sql_script)
 conn.close()
 
 # Create the agent executor
-db = SQLDatabase.from_uri("sqlite:///./Chinook.db")
-toolkit = SQLDatabaseToolkit(db=db)
+db = SQLDatabase.from_uri("sqlite:///C:/Users/aryan/Desktop/WORK/Rsystem/sql_gen/Chinook.db")
+openai_instance = OpenAI(temperature=0)
+toolkit = SQLDatabaseToolkit(db=db, llm=openai_instance)
 agent_executor = create_sql_agent(
     llm=OpenAI(temperature=0),
     toolkit=toolkit,
